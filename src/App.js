@@ -1,4 +1,3 @@
-import PromtpayBox from "./component/PromtpayBox";
 import Home from "./page/Home";
 function App() {
   return (
