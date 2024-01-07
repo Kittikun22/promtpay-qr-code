@@ -18,6 +18,7 @@ function PromtpayBox() {
   const [amount, setAmount] = useState(0.0);
   const [qrCode, setqrCode] = useState("sample");
   const [qrCodeSize, setQrCodeSize] = useState(getInitialSize);
+  const [error, setError] = useState("");
 
   function getInitialSize() {
     return window.innerWidth < 600 ? 256 : 384;
@@ -38,11 +39,11 @@ function PromtpayBox() {
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (
-        event.key === "Enter" ||
-        event.key === "Escape" ||
-        event.key === " "
+        active &&
+        (event.key === "Enter" || event.key === "Escape" || event.key === " ")
       ) {
         setAmount(0.0);
+        setError("");
         setActive(false);
       }
     };
@@ -52,7 +53,7 @@ function PromtpayBox() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [setActive]);
+  }, [active]);
 
   const promtpayNumber = "085-465-1855";
 
@@ -71,12 +72,17 @@ function PromtpayBox() {
 
   const handleQRSubmit = (e) => {
     e.preventDefault();
-    setqrCode(generatePayload(promtpayNumber, { amount }));
-    setActive(true);
+    if (amount === 0) {
+      setError("จำนวนเงินเท่ากับ 0 ");
+    } else {
+      setqrCode(generatePayload(promtpayNumber, { amount }));
+      setActive(true);
+    }
   };
 
   function handleFinish(e) {
     e.preventDefault();
+    setError("");
     setAmount(0.0);
     setActive(false);
   }
@@ -128,6 +134,8 @@ function PromtpayBox() {
               value={amount}
               onChange={handleAmount}
               autoComplete="off"
+              error={!!error}
+              helperText={error}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">บาท</InputAdornment>
