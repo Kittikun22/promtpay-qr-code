@@ -35,6 +35,25 @@ function PromtpayBox() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (
+        event.key === "Enter" ||
+        event.key === "Escape" ||
+        event.key === " "
+      ) {
+        setAmount(0.0);
+        setActive(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [setActive]);
+
   const promtpayNumber = "085-465-1855";
 
   const formattedNumber = (num) => {
