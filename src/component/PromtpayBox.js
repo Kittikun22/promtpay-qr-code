@@ -67,12 +67,16 @@ function PromtpayBox() {
   };
 
   function handleAmount(e) {
-    setAmount(parseFloat(e.target.value));
+    const inputValue = e.target.value;
+    if (!isNaN(inputValue) || inputValue === "") {
+      setAmount(inputValue === "" ? "" : parseFloat(inputValue));
+      setError("");
+    }
   }
 
   const handleQRSubmit = (e) => {
     e.preventDefault();
-    if (amount === 0) {
+    if (amount === 0 || amount === "") {
       setError("จำนวนเงินเท่ากับ 0 ");
     } else {
       setqrCode(generatePayload(promtpayNumber, { amount }));
@@ -130,7 +134,9 @@ function PromtpayBox() {
             <Typography variant="h6">กรอกจำนวนเงิน</Typography>
             <TextField
               size="small"
-              type="float"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={amount}
               onChange={handleAmount}
               autoComplete="off"
@@ -140,7 +146,9 @@ function PromtpayBox() {
                 endAdornment: (
                   <InputAdornment position="end">บาท</InputAdornment>
                 ),
+                style: { fontSize: "1.5rem" },
               }}
+              sx={{ width: { xs: "90%", sm: "60%" } }}
             />
             <Button
               onClick={handleQRSubmit}
