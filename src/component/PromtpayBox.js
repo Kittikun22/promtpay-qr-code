@@ -13,9 +13,7 @@ import { motion } from "framer-motion";
 
 const generatePayload = require("promptpay-qr");
 
-function PromtpayBox() {
-  const [active, setActive] = useState(false);
-  const [amount, setAmount] = useState(0.0);
+function PromtpayBox({ amount, setAmount, active, setActive }) {
   const [qrCode, setqrCode] = useState("sample");
   const [qrCodeSize, setQrCodeSize] = useState(getInitialSize);
   const [error, setError] = useState("");
@@ -53,7 +51,7 @@ function PromtpayBox() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [active]);
+  }, [active, setAmount, setActive]);
 
   const promtpayNumber = "085-465-1855";
 
@@ -135,11 +133,10 @@ function PromtpayBox() {
             <TextField
               size="small"
               type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
               value={amount}
               onChange={handleAmount}
               autoComplete="off"
+              autoFocus
               error={!!error}
               helperText={error}
               InputProps={{
@@ -147,6 +144,8 @@ function PromtpayBox() {
                   <InputAdornment position="end">บาท</InputAdornment>
                 ),
                 style: { fontSize: "1.5rem" },
+                inputMode: "numeric",
+                pattern: "[0-9]*",
               }}
               sx={{ width: { xs: "90%", sm: "60%" } }}
             />

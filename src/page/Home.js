@@ -1,8 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PromtpayBox from "../component/PromtpayBox";
 import { Box, Stack } from "@mui/material";
 
 function Home() {
+  const [amount, setAmount] = useState(0.0);
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    const handleStorageUpdate = (event) => {
+      if (event.key === "sharedAmount") {
+        const updatedAmount = parseFloat(event.newValue);
+        if (!isNaN(updatedAmount)) {
+          setAmount(updatedAmount);
+        }
+      } else if (event.key === "sharedActive") {
+        setActive(event.newValue === "true");
+      }
+    };
+
+    window.addEventListener("storage", handleStorageUpdate);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageUpdate);
+    };
+  }, [setAmount, setActive]);
+
+  useEffect(() => {
+    localStorage.setItem("sharedAmount", amount.toString());
+    localStorage.setItem("sharedActive", active.toString());
+  }, [amount, active]);
+
   return (
     <div>
       <Box
@@ -35,7 +61,12 @@ function Home() {
                 borderTopLeftRadius: 10,
               }}
             />
-            <PromtpayBox />
+            <PromtpayBox
+              amount={amount}
+              setAmount={setAmount}
+              active={active}
+              setActive={setActive}
+            />
           </Stack>
         </Box>
       </Box>
