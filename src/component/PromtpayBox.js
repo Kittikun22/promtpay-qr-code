@@ -10,6 +10,7 @@ import {
 import QRCode from "qrcode.react";
 import DoneIcon from "@mui/icons-material/Done";
 import { motion } from "framer-motion";
+import PinNumber from "./PinNumber";
 
 const generatePayload = require("promptpay-qr");
 
@@ -129,6 +130,7 @@ function PromtpayBox({ amount, setAmount, active, setActive }) {
             alignItems={"center"}
             sx={{ width: "100%" }}
           >
+            <Typography variant="h6">{amount}</Typography>
             <Typography variant="h6">กรอกจำนวนเงิน</Typography>
             <TextField
               size="small"
@@ -136,7 +138,7 @@ function PromtpayBox({ amount, setAmount, active, setActive }) {
               value={amount}
               onChange={handleAmount}
               autoComplete="off"
-              autoFocus
+              // autoFocus
               error={!!error}
               helperText={error}
               InputProps={{
@@ -159,6 +161,9 @@ function PromtpayBox({ amount, setAmount, active, setActive }) {
             >
               สร้าง QR Code
             </Button>
+            <Box width={{ sm: "80%", md: "60%" }} pt={2}>
+              <PinNumber amount={amount} setAmount={setAmount} />
+            </Box>
           </Stack>
         </Box>
       )}
